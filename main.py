@@ -21,7 +21,8 @@ def subscribe(cloud_event: CloudEvent) -> None:
     except Exception as e:
         raise ValueError(f"Invalid or malformed data: {e}")
     
-    CheckerAgent.message_handler(validated_payload)
+    agent = CheckerAgent()
+    agent.message_handler(validated_payload)
     
     
 
