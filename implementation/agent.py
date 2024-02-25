@@ -1,11 +1,12 @@
 from base.agent_base_class import CheckerAgentBase
 import logging
-from base.schemas import Vote, MessagePayload, UnsupportedMessageTypeException
+from base.schemas import Vote, MessagePayload, UnsupportedMessageTypeException, MessageType
 from langchain.tools import Tool
 from langchain_community.utilities import GoogleSearchAPIWrapper
 import json
 from openai import OpenAI
 import os
+from time import sleep
 
 search = GoogleSearchAPIWrapper(google_api_key=os.getenv("GOOGLE_SEARCH_API_KEY"))
 
@@ -22,10 +23,20 @@ tool = Tool(
 
 
 class CheckerAgent(CheckerAgentBase):
+
+    def search_google(q):
+        return json.dumps(tool.run(q))
+    
+    def agent_report(self, reasoning, category, truth_score = None, subjects = None):
+        self.reasoning = reasoning
+        self.category = category
+        self.truth_score = truth_score
+        return "Report Received"
+
     def check_message(self, message: MessagePayload):
         logging.info(f"Checking message: {message}")
 
-        if message.type != "text":
+        if message.type != MessageType.TEXT:
             raise UnsupportedMessageTypeException(f"Invalid message type: {message.type}")
 
         ##tool caller
@@ -42,19 +53,51 @@ class CheckerAgent(CheckerAgentBase):
             output = tool_dict[function_name](**function_arguments)
             return output
         
-        # thread = client.beta.threads.create(
-        #     messages=[
-        #         {
-        #             "role": "user",
-        #             "content": message.text,
-        #         }
-        #     ]
-        # )
+        thread = client.beta.threads.create(
+            messages=[
+                {
+                    "role": "user",
+                    "content": message.text,
+                }
+            ]
+        )
         
-        # run = client.beta.threads.runs.create(
-        #     thread_id=thread.id,
-        #     assistant_id="TO FILL",
-        # )
+        run = client.beta.threads.runs.create(
+            thread_id=thread.id,
+            assistant_id="asst_TZxHQlaXfmiFirgoFPAvvM8L",
+        )
 
-        
+        agent_complete = False
+
+        while not agent_complete:
+            sleep(1)
+            run = client.beta.threads.runs.retrieve(
+                thread_id=thread.id,
+                run_id=run.id
+            )
+            if run.status in ["expired", "completed", "failed", "cancelled"]:
+                agent_complete = True
+            elif run.status == "requires_action":
+                tool_calls = run.required_action.submit_tool_outputs.tool_calls
+                for tool_call in tool_calls:
+                    output = process_call(tool_call)
+                    run = client.beta.threads.runs.submit_tool_outputs(
+                            thread_id=thread.id,
+                            run_id=run.id,
+                            tool_outputs=[
+                                {
+                                    "tool_call_id": tool_call.id,
+                                    "output": output,
+                                }
+                            ]
+                        )
+        if not self.category:
+            raise ValueError("Category not set")
+        elif self.category == "info" and not self.truth_score:
+            raise ValueError("Truth score not set for info")
+        else:
+            logging.info(f"Reported category: {self.category}")
+            logging.info(f"Reported truth score: {self.truth_score}")
+            logging.info(f"Reported reasoning: {self.reasoning}")
+
         return Vote(category="unsure", truthScore=None) #change this
