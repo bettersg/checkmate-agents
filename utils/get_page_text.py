@@ -14,13 +14,13 @@ chrome_options.add_argument("--no-sandbox")
 chrome_options.add_argument("--disable-dev-shm-usage")
 
 # Selenium Grid URL running in Docker
-webdriver_url = os.getenv('WEBDRIVER_URL')
+webdriver_host = os.getenv('WEBDRIVER_HOST')
 
 # Set desired capabilities
 desired_capabilities = DesiredCapabilities.CHROME.copy()
 
 # Connect to Selenium
-driver = webdriver.Remote(command_executor=webdriver_url,
+driver = webdriver.Remote(command_executor=webdriver_host,
                           options=chrome_options)
 
 # Tool 2
