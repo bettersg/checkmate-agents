@@ -1,6 +1,17 @@
 from dotenv import load_dotenv
+import logging
+from google.cloud import logging as cloud_logging
 
 load_dotenv()
+def configure_logging():
+    # Instantiates a Google Cloud Logging client
+    client = cloud_logging.Client()
+
+    # Connects the logger to the root logging handler; by default, this captures
+    # all logs at INFO level and higher
+    client.setup_logging()
+
+configure_logging()
 
 from cloudevents.http import CloudEvent
 import functions_framework
@@ -17,7 +28,7 @@ def subscribe(cloud_event: CloudEvent) -> None:
         # Convert the decoded data to JSON
         payload = json.loads(message_data)
         validated_payload = MessagePayload(**payload)
-        print(f"Validated Payload: {validated_payload}")
+        logging.info(f"Validated Payload: {validated_payload}")
     except Exception as e:
         raise ValueError(f"Invalid or malformed data: {e}")
     

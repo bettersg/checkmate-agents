@@ -30,8 +30,6 @@ class CheckerAgentBase(ABC):
         if not isinstance(vote, Vote):
             raise TypeError(f"Expected Vote, got {type(vote)} from check_message implementation")
         
-
-        
         api_host = os.getenv("API_HOST")
         agent_name = os.getenv("AGENT_NAME")
         if not api_host:
