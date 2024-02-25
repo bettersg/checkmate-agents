@@ -41,7 +41,7 @@ class CheckerAgentBase(ABC):
         
         auth_req = google.auth.transport.requests.Request()
         id_token = google.oauth2.id_token.fetch_id_token(auth_req, api_host)
-        headers = {"Authorization", f"Bearer {id_token}"}
+        headers = {"Authorization": f"Bearer {id_token}"}
         try:
             vote_initialisation = VoteInitialisation(factCheckerName=agent_name)
             res = requests.post(f"{api_host}/messages/{messageId}/voteRequests", json=vote_initialisation.model_dump(mode="json"), headers=headers)
