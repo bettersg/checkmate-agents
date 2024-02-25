@@ -2,7 +2,6 @@ from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 from bs4 import BeautifulSoup
-from dotenv import load_dotenv
 import json
 import os
 import re
@@ -15,6 +14,8 @@ chrome_options.add_argument("--disable-dev-shm-usage")
 
 # Selenium Grid URL running in Docker
 webdriver_host = os.getenv('WEBDRIVER_HOST')
+
+print(webdriver_host)
 
 # Set desired capabilities
 desired_capabilities = DesiredCapabilities.CHROME.copy()

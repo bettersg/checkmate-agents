@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from utils.get_page_text import get_page_text
+# from utils.get_page_text import get_page_text
 from base.schemas import MessagePayload, Vote, VoteInitialisation
 import validators
 import requests
@@ -12,11 +12,11 @@ class CheckerAgentBase(ABC):
         ## must return an instance of Vote
         pass
 
-    def get_website_content(self, url):
-        if validators.url(url):
-            return get_page_text(url)
-        else:
-            raise ValueError(f"Invalid URL: {url}")
+    # def get_website_content(self, url):
+    #     if validators.url(url):
+    #         return get_page_text(url)
+    #     else:
+    #         raise ValueError(f"Invalid URL: {url}")
 
     def message_handler(self, message: MessagePayload) -> Vote:
         messageId = message.messageId
