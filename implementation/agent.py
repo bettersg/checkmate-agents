@@ -4,8 +4,12 @@ from base.schemas import Vote
 from langchain.tools import Tool
 from langchain_community.utilities import GoogleSearchAPIWrapper
 import json
+from openai import OpenAI
+import os
 
-search = GoogleSearchAPIWrapper()
+search = GoogleSearchAPIWrapper(google_api_key=os.getenv("GOOGLE_SEARCH_API_KEY"))
+
+client = OpenAI()
 
 def top10(query):
     return search.results(query, 10)
@@ -27,3 +31,6 @@ class CheckerAgent(CheckerAgentBase):
     
     def search_google(self, q):
         return json.dumps(tool.run(q))
+    
+    def agent_report(self, reasoning, category, truth_score = None, subjects = None) -> Vote:
+        return Vote(category=category, truthScore=truth_score)
