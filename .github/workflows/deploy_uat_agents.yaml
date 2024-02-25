@@ -28,7 +28,7 @@ jobs:
         id: get_token
         run: |
           # Obtain the access token
-          ACCESS_TOKEN=$(gcloud auth print-access-token --audiences=${{ vars.API_HOST }})
+          ACCESS_TOKEN=$(gcloud auth print-identity-token --audiences=${{ vars.API_HOST }})
           # Mask the access token in logs
           echo "::add-mask::$ACCESS_TOKEN"
           # Set the access token as an environment variable for use in subsequent steps
