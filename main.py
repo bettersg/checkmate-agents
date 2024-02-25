@@ -1,17 +1,8 @@
 from dotenv import load_dotenv
 import logging
-from google.cloud import logging as cloud_logging
 
 load_dotenv()
-def configure_logging():
-    # Instantiates a Google Cloud Logging client
-    client = cloud_logging.Client()
-
-    # Connects the logger to the root logging handler; by default, this captures
-    # all logs at INFO level and higher
-    client.setup_logging()
-
-configure_logging()
+logging.basicConfig(level=logging.INFO)
 
 from cloudevents.http import CloudEvent
 import functions_framework
@@ -19,6 +10,8 @@ import base64
 import json
 from base.schemas import MessagePayload
 from implementation.agent import CheckerAgent
+
+logging.info("Starting Checker Agent...")
 
 @functions_framework.cloud_event
 def subscribe(cloud_event: CloudEvent) -> None:
