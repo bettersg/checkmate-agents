@@ -35,7 +35,7 @@ jobs:
           echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
 
       - name: print env
-        run: echo "API_HOST=${{ env.API_HOST }}"
+        run: echo "API_HOST=${{ vars.API_HOST }}"
 
       - name: Call Google Cloud API
         run: |
