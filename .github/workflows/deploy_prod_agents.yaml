@@ -6,7 +6,7 @@ on:
       - "agent/prod/*"
 
 jobs:
-  build and deploy:
+  build_and_deploy:
     runs-on: ubuntu-latest
     environment: prod
     steps:
