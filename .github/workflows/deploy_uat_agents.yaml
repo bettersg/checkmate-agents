@@ -1,4 +1,4 @@
-name: Deply UAT Agent
+name: Deploy UAT Agent
 
 on:
   push:
@@ -30,10 +30,19 @@ jobs:
 
       - name: Call Google Cloud API
         run: |
-          curl -f ${{ env.API_HOST }}/checkers \
+          response=$(curl -s -o response.json -w "%{http_code}" ${{ env.API_HOST }}/checkers \
             --header "Authorization: Bearer $ACCESS_TOKEN" \
             --header "Content-Type: application/json" \
-            -d '{"name": "'"$AGENT_NAME"'", "type": "ai", "telegramId": null}'
+            -d '{"name": "'"$AGENT_NAME"'", "type": "ai", "telegramId": null}')
+          if [ "$response" = "409" ]; then
+            echo "Name already exists, continuing..."
+          elif [ "$response" = "200" ]; then
+            echo "Successfully created agent, continuing..."
+          else
+            echo "API call failed with response code $response"
+            cat response.json
+            exit 1
+          fi
 
       - name: Deploy cloud function with pubsub trigger
         run: |
