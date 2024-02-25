@@ -42,15 +42,19 @@ class CheckerAgent(CheckerAgentBase):
             output = tool_dict[function_name](**function_arguments)
             return output
         
-        thread = client.beta.threads.create(
-            messages=[
-                {
-                    "role": "user",
-                    "content": message.text,
-                }
-            ]
-        )
+        # thread = client.beta.threads.create(
+        #     messages=[
+        #         {
+        #             "role": "user",
+        #             "content": message.text,
+        #         }
+        #     ]
+        # )
+        
+        # run = client.beta.threads.runs.create(
+        #     thread_id=thread.id,
+        #     assistant_id="TO FILL",
+        # )
 
-        ##TODO: Implement your message checking logic here
         
         return Vote(category="unsure", truthScore=None) #change this
