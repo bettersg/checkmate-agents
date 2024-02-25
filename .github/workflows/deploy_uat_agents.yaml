@@ -61,4 +61,3 @@ jobs:
             --entry-point=subscribe \
             --trigger-topic=${{ vars.TOPIC_NAME }} \
             --set-env-vars AGENT_NAME=$AGENT_NAME,API_HOST=${{ vars.API_HOST }},WEBDRIVER_HOST=${{ vars.WEBDRIVER_HOST}}
-            --retry \
