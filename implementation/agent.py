@@ -26,7 +26,6 @@ class CheckerAgent(CheckerAgentBase):
         logging.info(f"Checking message: {message}")
 
         if message.type != "text":
-            ## TODO: raise a custom error
             raise UnsupportedMessageTypeException(f"Invalid message type: {message.type}")
 
         ##tool caller
@@ -46,9 +45,8 @@ class CheckerAgent(CheckerAgentBase):
         thread = client.beta.threads.create(
             messages=[
                 {
-                "role": "user",
-                "content": message.text,
-                #"file_ids": [file.id]
+                    "role": "user",
+                    "content": message.text,
                 }
             ]
         )
