@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from utils.get_page_text import get_page_text
-from base.schemas import MessagePayload, Vote, VoteInitialisation
+from base.schemas import MessagePayload, Vote, VoteInitialisation, UnsupportedMessageTypeException
 import google.auth.transport.requests
 import google.oauth2.id_token
 import validators
@@ -20,10 +20,13 @@ class CheckerAgentBase(ABC):
         else:
             raise ValueError(f"Invalid URL: {url}")
 
-    def message_handler(self, message: MessagePayload) -> Vote:
+    def message_handler(self, message: MessagePayload):
         messageId = message.messageId
         try:
             vote = self.check_message(message)
+        except UnsupportedMessageTypeException as e:
+            logging.info("Message type not supported")
+            return
         except Exception as e:
             raise ValueError(f"Error in check_message implementation: {e}")
         # check if valid Vote 

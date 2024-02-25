@@ -1,6 +1,6 @@
 from base.agent_base_class import CheckerAgentBase
 import logging
-from base.schemas import Vote
+from base.schemas import Vote, UnsupportedMessageTypeException
 
 class CheckerAgent(CheckerAgentBase):
     def check_message(self, message):

@@ -28,3 +28,6 @@ class VoteInitialisation(BaseModel):
 class Vote(BaseModel):
     category: FactCheckCategory
     truthScore: Optional[Annotated[int, Field(ge=0, le=5)]] = None
+
+class UnsupportedMessageTypeException(Exception):
+    pass
