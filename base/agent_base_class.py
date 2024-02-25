@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from utils.get_page_text import get_page_text
-from schemas import MessagePayload, Vote, VoteInitialisation
+from base.schemas import MessagePayload, Vote, VoteInitialisation
+import google.auth.transport.requests
+import google.oauth2.id_token
 import validators
 import requests
 import os
@@ -34,9 +36,13 @@ class CheckerAgentBase(ABC):
             raise ValueError("API_HOST environment variable not set")
         if not agent_name:
             raise ValueError("AGENT_NAME environment variable not set")
+        
+        auth_req = google.auth.transport.requests.Request()
+        id_token = google.oauth2.id_token.fetch_id_token(auth_req, api_host)
+        headers = {"Authorization": f"Bearer {id_token}"}
         try:
             vote_initialisation = VoteInitialisation(factCheckerName=agent_name)
-            res = requests.post(f"{api_host}/messages/{messageId}/voteRequests", json=vote_initialisation.model_dump(mode="json"))
+            res = requests.post(f"{api_host}/messages/{messageId}/voteRequests", json=vote_initialisation.model_dump(mode="json"), headers=headers)
             res.raise_for_status()
             # get response body
             response_body = res.json()
@@ -51,7 +57,7 @@ class CheckerAgentBase(ABC):
             raise ValueError(f"Vote request path does not contain messageId")
 
         try:
-            res = requests.post(f"{api_host}/{vote_request_path}", json=vote.model_dump(mode="json"))
+            res = requests.patch(f"{api_host}/{vote_request_path}", json=vote.model_dump(mode="json"), headers=headers)
             res.raise_for_status()
         except Exception as e:
             raise ValueError(f"Error updating the vote request: {e}")

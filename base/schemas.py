@@ -3,12 +3,12 @@ from enum import Enum
 from typing import Optional, Annotated
 
 class MessageType(Enum):
-    TEXT = 'text',
-    IMAGE = 'image',
+    TEXT = 'text'
+    IMAGE = 'image'
 
 class FactCheckCategory(Enum):
-    SCAM= "scam",
-    ILLICIT= "illicit",
+    SCAM= "scam"
+    ILLICIT= "illicit"
     IRRELEVANT= "irrelevant"
     SPAM= "spam"
     INFO= "info"
