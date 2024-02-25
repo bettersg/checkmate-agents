@@ -59,7 +59,7 @@ class CheckerAgentBase(ABC):
             raise ValueError(f"Vote request path does not contain messageId")
 
         try:
-            res = requests.post(f"{api_host}/{vote_request_path}", json=vote.model_dump(mode="json"), headers=headers)
+            res = requests.patch(f"{api_host}/{vote_request_path}", json=vote.model_dump(mode="json"), headers=headers)
             res.raise_for_status()
         except Exception as e:
             raise ValueError(f"Error updating the vote request: {e}")
