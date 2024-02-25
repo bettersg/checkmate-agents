@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from utils.get_page_text import get_page_text
-from schemas import MessagePayload, Vote, VoteInitialisation
+from base.schemas import MessagePayload, Vote, VoteInitialisation
 import validators
 import requests
 import os
