@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - "agent/prod/*"
+    paths:
+      - "implementation/agent.py"
 
 jobs:
   build_and_deploy:
