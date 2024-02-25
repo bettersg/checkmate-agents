@@ -34,12 +34,9 @@ jobs:
           # Set the access token as an environment variable for use in subsequent steps
           echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
 
-      - name: print env
-        run: echo "API_HOST=${{ vars.API_HOST }}"
-
       - name: Call Google Cloud API
         run: |
-          response=$(curl -s -o response.json -w "%{http_code}" ${{ env.API_HOST }}/checkers \
+          response=$(curl -s -o response.json -w "%{http_code}" ${{ vars.API_HOST }}/checkers \
             --header "Authorization: Bearer $ACCESS_TOKEN" \
             --header "Content-Type: application/json" \
             -v \
@@ -63,5 +60,5 @@ jobs:
             --source=. \
             --entry-point=subscribe \
             --trigger-topic=${{ vars.TOPIC_NAME }} \
-            --set-env-vars AGENT_NAME=$AGENT_NAME,API_HOST=${{ env.API_HOST }},WEBDRIVER_HOST=${{ env.WEBDRIVER_HOST}}
+            --set-env-vars AGENT_NAME=$AGENT_NAME,API_HOST=${{ vars.API_HOST }},WEBDRIVER_HOST=${{ vars.WEBDRIVER_HOST}}
             --retry \
