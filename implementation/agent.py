@@ -64,7 +64,7 @@ class CheckerAgent(CheckerAgentBase):
         
         run = client.beta.threads.runs.create(
             thread_id=thread.id,
-            assistant_id="asst_TZxHQlaXfmiFirgoFPAvvM8L",
+            assistant_id="asst_8qTNpp9tqQjkjnj4HhuWDCqs",
         )
 
         agent_complete = False
@@ -100,4 +100,4 @@ class CheckerAgent(CheckerAgentBase):
             logging.info(f"Reported truth score: {self.truth_score}")
             logging.info(f"Reported reasoning: {self.reasoning}")
 
-        return Vote(category="unsure", truthScore=None) #change this
+        return Vote(category=self.category, truthScore=int(self.truth_score)) #change this
