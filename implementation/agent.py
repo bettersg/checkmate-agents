@@ -8,4 +8,4 @@ class CheckerAgent(CheckerAgentBase):
 
         ##TODO: Implement your message checking logic here
         
-        return Vote(category="unsure", truthScore=None) #change this. You must return a vote instance
+        return Vote(category="unsure", truthScore=None) #change this. You must return an instance of class Vote
