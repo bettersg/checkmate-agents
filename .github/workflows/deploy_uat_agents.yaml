@@ -24,6 +24,9 @@ jobs:
       - name: Set up Cloud SDK
         uses: google-github-actions/setup-gcloud@v2
 
+      - name: Gcloud auth list
+        run: gcloud auth list
+
       - name: Get Access Token
         id: get_token
         run: |
