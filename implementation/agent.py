@@ -27,7 +27,7 @@ class CheckerAgent(CheckerAgentBase):
 
         if message.type != "text":
             ## TODO: raise a custom error
-            raise ValueError(f"Invalid message type: {message.type}")
+            raise UnsupportedMessageTypeException(f"Invalid message type: {message.type}")
 
         ##tool caller
         tool_dict = {
