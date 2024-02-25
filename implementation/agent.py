@@ -1,6 +1,6 @@
 from base.agent_base_class import CheckerAgentBase
 import logging
-from base.schemas import Vote, MessagePayload
+from base.schemas import Vote, MessagePayload, UnsupportedMessageTypeException
 from langchain.tools import Tool
 from langchain_community.utilities import GoogleSearchAPIWrapper
 import json
@@ -55,10 +55,4 @@ class CheckerAgent(CheckerAgentBase):
 
         ##TODO: Implement your message checking logic here
         
-        return Vote(category="unsure", truthScore=None) #change this. You must return an instance of class Vote.
-    
-    def search_google(self, q):
-        return json.dumps(tool.run(q))
-    
-    def agent_report(self, reasoning, category, truth_score = None, subjects = None) -> Vote:
-        return Vote(category=category, truthScore=truth_score)
+        return Vote(category="unsure", truthScore=None) #change this
