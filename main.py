@@ -11,7 +11,7 @@ import json
 from base.schemas import MessagePayload
 from implementation.agent import CheckerAgent
 
-logging.info("Starting Checker Agent")
+logging.info("Starting Checker Agent...")
 
 @functions_framework.cloud_event
 def subscribe(cloud_event: CloudEvent) -> None:
