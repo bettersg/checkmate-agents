@@ -26,7 +26,13 @@ jobs:
 
       - name: Get Access Token
         id: get_token
-        run: echo "::add-mask::ACCESS_TOKEN=$(gcloud auth print-access-token)" >> $GITHUB_ENV
+        run: |
+          # Obtain the access token
+          ACCESS_TOKEN=$(gcloud auth print-access-token)
+          # Mask the access token in logs
+          echo "::add-mask::$ACCESS_TOKEN"
+          # Set the access token as an environment variable for use in subsequent steps
+          echo "ACCESS_TOKEN=$ACCESS_TOKEN" >> $GITHUB_ENV
 
       - name: print env
         run: echo "API_HOST=${{ env.API_HOST }}"
