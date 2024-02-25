@@ -33,7 +33,8 @@ jobs:
           curl -f ${{ env.API_HOST }}/checkers \
             --header "Authorization: Bearer $ACCESS_TOKEN" \
             --header "Content-Type: application/json" \
-            -d '{"name": "'"$AGENT_NAME"'", "type": "ai", "telegramId": null}'
+            -d '{"name": "'"$AGENT_NAME"'", "type": "ai", "telegramId": null}' \
+            -v
 
       - name: Deploy cloud function with pubsub trigger
         run: |
