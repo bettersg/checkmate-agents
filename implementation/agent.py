@@ -1,6 +1,6 @@
 from base.agent_base_class import CheckerAgentBase
 import logging
-from base.schemas import Vote
+from base.schemas import Vote, MessagePayload, UnsupportedMessageTypeException
 from langchain.tools import Tool
 from langchain_community.utilities import GoogleSearchAPIWrapper
 import json
@@ -22,15 +22,37 @@ tool = Tool(
 
 
 class CheckerAgent(CheckerAgentBase):
-    def check_message(self, message):
+    def check_message(self, message: MessagePayload):
         logging.info(f"Checking message: {message}")
+
+        if message.type != "text":
+            ## TODO: raise a custom error
+            raise UnsupportedMessageTypeException(f"Invalid message type: {message.type}")
+
+        ##tool caller
+        tool_dict = {
+            "searchGoogle": self.search_google,
+            "getPageText": self.get_website_content,
+            "fileReport": self.agent_report,
+        }
+
+        def process_call(tool_call):
+            id = tool_call.id
+            function_name = tool_call.function.name
+            function_arguments = json.loads(tool_call.function.arguments)
+            output = tool_dict[function_name](**function_arguments)
+            return output
+        
+        thread = client.beta.threads.create(
+            messages=[
+                {
+                "role": "user",
+                "content": message.text,
+                #"file_ids": [file.id]
+                }
+            ]
+        )
 
         ##TODO: Implement your message checking logic here
         
-        return Vote(category="unsure", truthScore=None) #change this. You must return an instance of class Vote.
-    
-    def search_google(self, q):
-        return json.dumps(tool.run(q))
-    
-    def agent_report(self, reasoning, category, truth_score = None, subjects = None) -> Vote:
-        return Vote(category=category, truthScore=truth_score)
+        return Vote(category="unsure", truthScore=None) #change this
