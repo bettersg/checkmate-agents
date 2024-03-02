@@ -83,18 +83,19 @@ class CheckerAgent(CheckerAgentBase):
                 agent_complete = True
             elif run.status == "requires_action":
                 tool_calls = run.required_action.submit_tool_outputs.tool_calls
+                tool_outputs = []
                 for tool_call in tool_calls:
                     output = process_call(tool_call)
-                    run = client.beta.threads.runs.submit_tool_outputs(
-                            thread_id=thread.id,
-                            run_id=run.id,
-                            tool_outputs=[
-                                {
-                                    "tool_call_id": tool_call.id,
-                                    "output": output,
-                                }
-                            ]
-                        )
+                    tool_outputs.append({
+                        "tool_call_id": tool_call.id,
+                        "output": output,
+                    })
+                assert len(tool_outputs) == len(tool_calls)
+                run = client.beta.threads.runs.submit_tool_outputs(
+                        thread_id=thread.id,
+                        run_id=run.id,
+                        tool_outputs=tool_outputs
+                    )
         if not agent_complete:
             raise TimeoutError("Agent did not complete in time")
         if not self.category:
