@@ -14,11 +14,11 @@ class CheckerAgentBase(ABC):
         ## must return an instance of Vote
         pass
 
-    def get_website_content(self, url):
-        if validators.url(url):
-            return get_page_text(url)
+    def get_website_content(self, link):
+        if validators.url(link):
+            return get_page_text(link)
         else:
-            raise ValueError(f"Invalid URL: {url}")
+            raise ValueError(f"Invalid URL: {link}")
 
     def message_handler(self, message: MessagePayload):
         messageId = message.messageId
