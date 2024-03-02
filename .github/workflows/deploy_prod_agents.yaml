@@ -10,7 +10,7 @@ on:
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
-    environment: uat
+    environment: prod
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
