@@ -6,7 +6,7 @@ from langchain_community.utilities import GoogleSearchAPIWrapper
 import json
 from openai import OpenAI
 import os
-from time import sleep
+from time import sleep, time
 
 search = GoogleSearchAPIWrapper(google_api_key=os.getenv("GOOGLE_SEARCH_API_KEY"))
 
@@ -24,7 +24,7 @@ tool = Tool(
 
 class CheckerAgent(CheckerAgentBase):
 
-    def search_google(q):
+    def search_google(self, q):
         return json.dumps(tool.run(q))
     
     def agent_report(self, reasoning, category, truth_score = None, subjects = None):
@@ -64,12 +64,16 @@ class CheckerAgent(CheckerAgentBase):
         
         run = client.beta.threads.runs.create(
             thread_id=thread.id,
-            assistant_id="asst_8qTNpp9tqQjkjnj4HhuWDCqs",
+            assistant_id="asst_7fULiEfOhzfUEuEjhPyY7Ntl",
         )
 
         agent_complete = False
 
-        while not agent_complete:
+        # Poll the run until it's complete or up to 60 seconds
+
+        start = time()
+
+        while not agent_complete and ((time() - start) < 60):
             sleep(1)
             run = client.beta.threads.runs.retrieve(
                 thread_id=thread.id,
@@ -91,13 +95,15 @@ class CheckerAgent(CheckerAgentBase):
                                 }
                             ]
                         )
+        if not agent_complete:
+            raise TimeoutError("Agent did not complete in time")
         if not self.category:
             raise ValueError("Category not set")
-        elif self.category == "info" and not self.truth_score:
+        elif self.category == "info" and (self.truth_score is None):
             raise ValueError("Truth score not set for info")
         else:
             logging.info(f"Reported category: {self.category}")
             logging.info(f"Reported truth score: {self.truth_score}")
             logging.info(f"Reported reasoning: {self.reasoning}")
 
-        return Vote(category=self.category, truthScore=int(self.truth_score)) #change this
+        return Vote(category=self.category, truthScore=int(self.truth_score) if self.category == "info" else None) #change this

@@ -160,4 +160,4 @@ cython_debug/
 #.idea/
 
 service_accounts
-tests
+event.json
