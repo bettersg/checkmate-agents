@@ -31,6 +31,7 @@ class CheckerAgent(CheckerAgentBase):
         self.reasoning = reasoning
         self.category = category
         self.truth_score = truth_score
+        logging.info(f"Agent report received\nReasoning: {reasoning}\nCategory: {category}\nTruth Score: {truth_score}")
         return "Report Received"
 
     def check_message(self, message: MessagePayload):
