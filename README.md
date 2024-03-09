@@ -8,7 +8,7 @@ CheckMate's factchecking agents
 
 # What must the agent do?
 
-The agent should be defined in the `CheckerAgent` class in `/implementation/agent.py`. You need to provide a `check_message` method, of which a skeleton already exists. This method will receive an object of the `MessagePayload` class, as defined in `schemas.py`. This comprises the following fields:
+The agent should be defined in the `CheckerAgent` class in `/implementation/agent.py`. You need to provide a `check_message` method, of which a skeleton already exists. This method will receive an object of the `MessagePayload` class, as defined in `base/schemas.py`. This comprises the following fields:
 
 - messageId - Unique identifier for the message. Can be ignored for the agent's implementation
 - type - Either 'image' or 'text'. Used to distinguish different types of messages in the pipeline
@@ -16,7 +16,7 @@ The agent should be defined in the `CheckerAgent` class in `/implementation/agen
 - caption - Only exists if the message type is 'image'. The caption of the image sent in
 - storageUrl - Only exists if the message type is 'image'. The GCP Cloud Storage Bucket URI of the image sent in. Don't use this for now
 
-The method must return a Vote object, again defined in `schemas.py`, which should include the following fields:
+The method must return a Vote object, again defined in `base/schemas.py`, which should include the following fields:
 
 - category - Either of the following 7 categories:
 
