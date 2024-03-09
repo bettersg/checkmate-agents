@@ -18,11 +18,11 @@ class FactCheckCategory(Enum):
 
 
 class MessagePayload(BaseModel):
-    messageId: str
-    type: MessageType
-    text: Optional[str] = None
-    caption: Optional[str] = None
-    storageUrl: Optional[str] = None
+    messageId: str = Field(..., description="Unique identifier for the message. Can be ignored for the agent's implementation")
+    type: MessageType = Field(..., description="Either 'image' or 'text'. Used to distinguish different types of messages in the pipeline")
+    text: Optional[str] = Field(None, description="Only exists if the message type is 'text'. Text contents of the whatsapp message sent in")
+    caption: Optional[str] = Field(None, description="Only exists if the message type is 'image'. The caption of the image sent in")
+    storageUrl: Optional[str] = Field(None, description="Only exists if the message type is 'image'. The GCP Cloud Storage Bucket URI of the image sent in")
 
 class VoteInitialisation(BaseModel):
     factCheckerName: str

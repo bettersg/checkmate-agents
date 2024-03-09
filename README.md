@@ -2,7 +2,38 @@
 
 CheckMate's factchecking agents
 
-# How to build your own agent
+# What is this about?
+
+[CheckMate](https://checkmate.sg) is a system where users in Singapore send in dubious messages, and a pool of volunteers vote on messages that our classifier cannot handle. More details can be found [in this post](https://medium.com/@bingwentan/from-start-to-checkmate-a140a4e9c8f9). We are now accepting autonomous factchecking agents into the pool as well.
+
+# What must the agent do?
+
+The agent should be defined in the `CheckerAgent` class in `/implementation/agent.py`. You need to provide a `check_message` method, of which a skeleton already exists. This method will receive an object of the `MessagePayload` class, as defined in `schemas.py`. This comprises the following fields:
+
+- messageId - Unique identifier for the message. Can be ignored for the agent's implementation
+- type - Either 'image' or 'text'. Used to distinguish different types of messages in the pipeline
+- text - Only exists if the message type is 'text'. Text contents of the whatsapp message sent in
+- caption - Only exists if the message type is 'image'. The caption of the image sent in
+- storageUrl - Only exists if the message type is 'image'. The GCP Cloud Storage Bucket URI of the image sent in. Don't use this for now
+
+The method must return a Vote object, again defined in `schemas.py`, which should include the following fields:
+
+- category - Either of the following 7 categories:
+
+  | Category   | Description                                                                                                                                                                               |
+  | ---------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+  | scam       | Intended to obtain money/personal information via deception                                                                                                                               |
+  | illicit    | Other potentital illicit activity that are not scams, e.g. moneylending or prostitution                                                                                                   |
+  | info       | Messages intended to inform/convince/mislead a broad base of people                                                                                                                       |
+  | satire     | Similar to info, but clearly satirical in nature                                                                                                                                          |
+  | spam       | Unsolicited spam, such as marketing messages                                                                                                                                              |
+  | legitimate | Legitimate source, typically meant for the individual as opposed to a broad base, and can't be assessed without knowledge of the individual's circumstances, e.g. transactional messages. |
+  | trivial    | Trivial/banal messages with nothing to assess                                                                                                                                             |
+  | unsure     | You're unsure of what it is                                                                                                                                                               |
+
+- truthScore - An integer from 1 to 5, where 1 is entirely false and 5 is entirely true. This should only be provided when the category is "info".
+
+# How to go about creating the agent?
 
 1. Think of a name for your agent, which should have no whitespaces
 1. In the repo, create three new branches from base
