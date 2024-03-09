@@ -97,6 +97,7 @@ class CheckerAgent(CheckerAgentBase):
                         run_id=run.id,
                         tool_outputs=tool_outputs
                     )
+        logging.info(f"Agent complete: {agent_complete}, thread_id: {thread.id}, run_id: {run.id}")
         if not agent_complete:
             raise TimeoutError("Agent did not complete in time")
         if not self.category:
