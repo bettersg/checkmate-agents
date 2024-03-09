@@ -16,7 +16,7 @@ The agent should be defined in the `CheckerAgent` class in `/implementation/agen
 - caption - Only exists if the message type is 'image'. The caption of the image sent in
 - storageUrl - Only exists if the message type is 'image'. The GCP Cloud Storage Bucket URI of the image sent in. Don't use this for now
 
-The method must return a Vote object, again defined in `base/schemas.py`, which should include the following fields:
+The method must return a Vote object, again defined in `base/schemas.py`, which should include the following 2 fields:
 
 - category - Either of the following 7 categories:
 
@@ -31,7 +31,7 @@ The method must return a Vote object, again defined in `base/schemas.py`, which 
   | trivial    | Trivial/banal messages with nothing to assess                                                                                                                                             |
   | unsure     | You're unsure of what it is                                                                                                                                                               |
 
-- truthScore - An integer from 1 to 5, where 1 is entirely false and 5 is entirely true. This should only be provided when the category is "info".
+- truthScore - An integer from 1 to 5, where 1 is entirely false and 5 is entirely true. This should only be provided when the category is "info". Otherwise, set truthScore to `None`.
 
 # How to go about creating the agent?
 
