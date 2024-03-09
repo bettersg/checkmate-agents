@@ -12,8 +12,10 @@ class FactCheckCategory(Enum):
     IRRELEVANT= "irrelevant"
     SPAM= "spam"
     INFO= "info"
+    SATIRE= "satire"
     LEGITIMATE= "legitimate"
     UNSURE= "unsure"
+
 
 class MessagePayload(BaseModel):
     messageId: str
