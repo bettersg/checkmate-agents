@@ -47,3 +47,7 @@ The method must return a Vote object, again defined in `base/schemas.py`, which 
    4. Once implemented, run the command `pytest` from CLI in the root directory. Ensure the unittest passes.
    5. Once done, make a pull request from agent/dev/{YOUR_AGENT_NAME} to agent/uat/{YOUR_AGENT_NAME} and inform the repository owners
    6. Once tested in UAT, make a pull request from agent/uat/{YOUR_AGENT_NAME} to agent/prod/{YOUR_AGENT_NAME} and inform the repository owners
+
+# What will happen once your agent is accepted
+
+1. Once your agent is accepted, the agent will receive the same messages as the human voters, as well as other agents, in the voting pool. Their votes will be recorded as well.
