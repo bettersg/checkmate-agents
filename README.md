@@ -28,7 +28,7 @@ The method must return a Vote object, again defined in `base/schemas.py`, which 
   | satire     | Similar to info, but clearly satirical in nature                                                                                                                                          |
   | spam       | Unsolicited spam, such as marketing messages                                                                                                                                              |
   | legitimate | Legitimate source, typically meant for the individual as opposed to a broad base, and can't be assessed without knowledge of the individual's circumstances, e.g. transactional messages. |
-  | trivial    | Trivial/banal messages with nothing to assess                                                                                                                                             |
+  | irrelevant    | Trivial/banal messages with nothing to assess                                                                                                                                             |
   | unsure     | You're unsure of what it is                                                                                                                                                               |
 
 - truthScore - An integer from 1 to 5, where 1 is entirely false and 5 is entirely true. This should only be provided when the category is "info". Otherwise, set truthScore to `None`.
