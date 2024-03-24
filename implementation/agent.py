@@ -74,7 +74,7 @@ class CheckerAgent(CheckerAgentBase):
 
         start = time()
 
-        while not agent_complete and ((time() - start) < 60):
+        while not agent_complete and ((time() - start) < 120):
             sleep(1)
             run = client.beta.threads.runs.retrieve(
                 thread_id=thread.id,
