@@ -26,6 +26,9 @@ class CheckerAgentBase(ABC):
             auth_req = google.auth.transport.requests.Request()
             id_token = google.oauth2.id_token.fetch_id_token(auth_req, api_host)
             headers = {"Authorization": f"Bearer {id_token}"}
+        except Exception as e:
+            raise ValueError(f"Error fetching ID token: {e}")
+        try:
             vote_initialisation = VoteInitialisation(factCheckerName=agent_name)
             res = requests.post(f"{api_host}/messages/{messageId}/voteRequests", json=vote_initialisation.model_dump(mode="json"), headers=headers)
             res.raise_for_status()
