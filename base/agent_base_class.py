@@ -23,6 +23,25 @@ class CheckerAgentBase(ABC):
     def message_handler(self, message: MessagePayload):
         messageId = message.messageId
         try:
+            auth_req = google.auth.transport.requests.Request()
+            id_token = google.oauth2.id_token.fetch_id_token(auth_req, api_host)
+            headers = {"Authorization": f"Bearer {id_token}"}
+            vote_initialisation = VoteInitialisation(factCheckerName=agent_name)
+            res = requests.post(f"{api_host}/messages/{messageId}/voteRequests", json=vote_initialisation.model_dump(mode="json"), headers=headers)
+            res.raise_for_status()
+            # get response body
+            response_body = res.json()
+            vote_request_path = response_body.get("voteRequestPath")
+        except Exception as e:
+            raise ValueError(f"Error creating vote request: {e}")
+        
+        if not vote_request_path:
+            raise ValueError(f"Vote request path not returned as as part of response")
+        
+        if messageId not in vote_request_path:
+            raise ValueError(f"Vote request path does not contain messageId")
+        
+        try: ## checking done here
             vote = self.check_message(message)
         except UnsupportedMessageTypeException as e:
             logging.info("Message type not supported")
@@ -39,25 +58,6 @@ class CheckerAgentBase(ABC):
             raise ValueError("API_HOST environment variable not set")
         if not agent_name:
             raise ValueError("AGENT_NAME environment variable not set")
-        
-        auth_req = google.auth.transport.requests.Request()
-        id_token = google.oauth2.id_token.fetch_id_token(auth_req, api_host)
-        headers = {"Authorization": f"Bearer {id_token}"}
-        try:
-            vote_initialisation = VoteInitialisation(factCheckerName=agent_name)
-            res = requests.post(f"{api_host}/messages/{messageId}/voteRequests", json=vote_initialisation.model_dump(mode="json"), headers=headers)
-            res.raise_for_status()
-            # get response body
-            response_body = res.json()
-            vote_request_path = response_body.get("voteRequestPath")
-        except Exception as e:
-            raise ValueError(f"Error creating vote request: {e}")
-        
-        if not vote_request_path:
-            raise ValueError(f"Vote request path not returned as as part of response")
-        
-        if messageId not in vote_request_path:
-            raise ValueError(f"Vote request path does not contain messageId")
 
         try:
             res = requests.patch(f"{api_host}/{vote_request_path}", json=vote.model_dump(mode="json"), headers=headers)
